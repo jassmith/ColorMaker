@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorMaker", "ColorMaker\ColorMaker.csproj", "{EA7166C9-4C60-4DC1-A0CB-1BF5DE50C99C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorMixer", "ColorMixer\ColorMixer.csproj", "{C238A365-E1C0-4821-A1D6-24B630FC44E2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C238A365-E1C0-4821-A1D6-24B630FC44E2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C238A365-E1C0-4821-A1D6-24B630FC44E2}.Debug|x86.Build.0 = Debug|Any CPU
+		{C238A365-E1C0-4821-A1D6-24B630FC44E2}.Release|x86.ActiveCfg = Release|Any CPU
+		{C238A365-E1C0-4821-A1D6-24B630FC44E2}.Release|x86.Build.0 = Release|Any CPU
+		{EA7166C9-4C60-4DC1-A0CB-1BF5DE50C99C}.Debug|x86.ActiveCfg = Debug|x86
+		{EA7166C9-4C60-4DC1-A0CB-1BF5DE50C99C}.Debug|x86.Build.0 = Debug|x86
+		{EA7166C9-4C60-4DC1-A0CB-1BF5DE50C99C}.Release|x86.ActiveCfg = Release|x86
+		{EA7166C9-4C60-4DC1-A0CB-1BF5DE50C99C}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = ColorMaker\ColorMaker.csproj
+	EndGlobalSection
+EndGlobal
