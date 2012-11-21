@@ -10,7 +10,10 @@ namespace ColorMixer
 		double a;
 		public double A {
 			get { return a; }
-			set { a = value; }
+			set {
+				value = value.Clamp (0, 1);
+				a = value; 
+			}
 		}
 
 		double r;
@@ -20,6 +23,7 @@ namespace ColorMixer
 				return r;
 			}
 			set {
+				value = value.Clamp (0, 1);
 				if (r == value)
 					return;
 				r = value;
@@ -33,6 +37,7 @@ namespace ColorMixer
 				return g;
 			}
 			set {
+				value = value.Clamp (0, 1);
 				if (g == value)
 					return;
 				g = value;
@@ -46,6 +51,7 @@ namespace ColorMixer
 				return b;
 			}
 			set {
+				value = value.Clamp (0, 1);
 				if (b == value)
 					return;
 				b = value;
@@ -60,6 +66,7 @@ namespace ColorMixer
 				return hue;
 			}
 			set {
+				value = value.Clamp (0, 1);
 				if (hue == value)
 					return;
 				hue = value;
@@ -73,6 +80,7 @@ namespace ColorMixer
 				return saturation;
 			}
 			set {
+				value = value.Clamp (0, 1);
 				if (saturation == value)
 					return;
 				saturation = value;
@@ -86,6 +94,7 @@ namespace ColorMixer
 				return luminosity;
 			}
 			set {
+				value = value.Clamp (0, 1);
 				if (luminosity == value)
 					return;
 				luminosity = value;
@@ -95,10 +104,10 @@ namespace ColorMixer
 
 		public Color (double r, double g, double b, double a)
 		{
-			this.r = r;
-			this.g = g;
-			this.b = b;
-			this.a = a;
+			this.r = r.Clamp (0, 1);
+			this.g = g.Clamp (0, 1);
+			this.b = b.Clamp (0, 1);
+			this.a = a.Clamp (0, 1);
 
 			hue = luminosity = saturation = 0;
 
@@ -108,9 +117,9 @@ namespace ColorMixer
 
 		public Color (double r, double g, double b)
 		{
-			this.r = r;
-			this.g = g;
-			this.b = b;
+			this.r = r.Clamp (0, 1);
+			this.g = g.Clamp (0, 1);
+			this.b = b.Clamp (0, 1);
 			this.a = 1;
 
 			hue = luminosity = saturation = 0;
@@ -132,13 +141,6 @@ namespace ColorMixer
 
 		void UpdateRGBFromHSL ()
 		{
-			if (luminosity > 1) luminosity = 1;
-			if (luminosity < 0) luminosity = 0;
-			if (hue > 1) hue = 1;
-			if (hue < 0) hue = 0;
-			if (saturation > 1) saturation = 1;
-			if (saturation < 0) saturation = 0;
-
 			if (luminosity == 0) {
 				r = g = b = 0;
 				return;
@@ -147,16 +149,16 @@ namespace ColorMixer
 			if (saturation == 0) {
 				r = g = b = luminosity;
 			} else {
-				double temp2 = luminosity <= 0.5 ? luminosity * (1.0 + saturation) : luminosity + saturation -(luminosity * saturation);
+				double temp2 = luminosity <= 0.5 ? luminosity * (1.0 + saturation) : luminosity + saturation - (luminosity * saturation);
 				double temp1 = 2.0 * luminosity - temp2;
 				
-				double[] t3 = new double[] { hue + 1.0 / 3.0, hue, hue - 1.0 / 3.0};
-				double[] clr= new double[] { 0, 0, 0};
+				double[] t3 = new double[] { hue + 1.0 / 3.0, hue, hue - 1.0 / 3.0 };
+				double[] clr= new double[] { 0, 0, 0 };
 				for (int i = 0; i < 3; i++) {
 					if (t3[i] < 0)
 						t3[i] += 1.0;
 					if (t3[i] > 1)
-						t3[i]-=1.0;
+						t3[i] -= 1.0;
 					if (6.0 * t3[i] < 1.0)
 						clr[i] = temp1 + (temp2 - temp1) * t3[i] * 6.0;
 					else if (2.0 * t3[i] < 1.0)
@@ -203,7 +205,7 @@ namespace ColorMixer
 			double h;
 			if (r == v) {
 				h = (g == m ? 5.0 + b2 : 1.0 - g2);
-			} else if (G == v) {
+			} else if (g == v) {
 				h = (b == m ? 1.0 + r2 : 3.0 - b2);
 			} else {
 				h = (r == m ? 3.0 + g2 : 5.0 - r2);
@@ -238,6 +240,35 @@ namespace ColorMixer
 		public static implicit operator Color (Gdk.Color gdkColor)
 		{
 			return new Color (gdkColor.Red / (double)ushort.MaxValue, gdkColor.Green / (double)ushort.MaxValue, gdkColor.Blue / (double)ushort.MaxValue, 1);
+		}
+
+		public static bool operator == (Color color1, Color color2)
+		{
+			return color1.r == color2.r && color1.g == color2.g && color1.b == color2.b && color1.a == color2.a;
+		}
+
+		public static bool operator != (Color color1, Color color2)
+		{
+			return color1.r != color2.r || color1.g != color2.g || color1.b != color2.b || color1.a != color2.a;
+		}
+
+		public override int GetHashCode ()
+		{
+			return r.GetHashCode () + g.GetHashCode () + b.GetHashCode () + a.GetHashCode ();
+		}
+
+		public override bool Equals (object obj)
+		{
+			if (obj is Color) {
+				var color = (Color)obj;
+				return color.r == r && color.g == g && color.b == b && color.a == a;
+			}
+			return base.Equals (obj);
+		}
+
+		public override string ToString ()
+		{
+			return string.Format ("[Color: A={0}, R={1}, G={2}, B={3}, Hue={4}, Saturation={5}, Luminosity={6}]", A, R, G, B, Hue, Saturation, Luminosity);
 		}
 	}
 }
