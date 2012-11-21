@@ -1,0 +1,12 @@
+
+*.dll
+
+*.mdb
+
+*.exe
+
+ColorMaker/.DS_Store
+
+ColorMaker.userprefs
+
+.DS_Store
